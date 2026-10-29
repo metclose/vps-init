@@ -14,5 +14,6 @@ curl -fsSL https://raw.githubusercontent.com/metclose/vps-init/main/init.sh | ba
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/metclose/vps-init/main/init.sh | bash -s -- \
-  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILL9baT/MTkNFuHdhRFZo5aqWHi/10fhBaejaDwDj49k" "55520"
+  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILL9baT/MTkNFuHdhRFZo5aqWHi/10fhBaejaDwDj49k" \
+  "55520"
 ```
