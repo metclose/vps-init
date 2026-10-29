@@ -4,6 +4,8 @@
 
 ## 一键运行
 
+建议在编辑器中改好公钥端口再粘贴至服务器：
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/metclose/vps-init/main/init.sh | bash -s -- \
   "你的公钥" \
