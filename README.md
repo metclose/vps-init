@@ -7,7 +7,7 @@
 建议在编辑器中改好公钥端口再粘贴至服务器：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/metclose/vps-init/main/init.sh | bash -s -- \
+curl -fsSL https://raw.githubusercontent.com/metclose/vps-init/main/init.sh | sh -s -- \
   "你的公钥" \
   "你的端口"
 ```
@@ -15,7 +15,7 @@ curl -fsSL https://raw.githubusercontent.com/metclose/vps-init/main/init.sh | ba
 例如：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/metclose/vps-init/main/init.sh | bash -s -- \
+curl -fsSL https://raw.githubusercontent.com/metclose/vps-init/main/init.sh | sh -s -- \
   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOVtWN+UduTfoVmonlHIW21g5glLiE4DD2kgrOrPt0rp" \
   "55520"
 ```
