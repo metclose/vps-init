@@ -9,7 +9,7 @@ if [ -z "$PUBKEY" ] || [ -z "$PORT" ]; then
   exit 1
 fi
 
-# ── 系统检测 ──
+# 0. 系统检测
 IS_ALPINE=0
 if [ -f /etc/alpine-release ]; then
   IS_ALPINE=1
