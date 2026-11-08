@@ -9,6 +9,12 @@ if [[ -z "$PUBKEY" || -z "$PORT" ]]; then
   exit 1
 fi
 
+# ── 系统检测 ──
+IS_ALPINE=0
+if [ -f /etc/alpine-release ]; then
+  IS_ALPINE=1
+fi
+
 # 1. 确保 .ssh 目录存在并设置权限
 mkdir -p ~/.ssh
 chmod 700 ~/.ssh
@@ -17,16 +23,30 @@ chmod 700 ~/.ssh
 echo "$PUBKEY" > ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 
-# 3. 删除端口+删除密钥+删除密码
-sed -i '/^#*Port/d' /etc/ssh/sshd_config
-sed -i '/^#*PubkeyAuthentication/d' /etc/ssh/sshd_config
-sed -i '/^#*PasswordAuthentication/d' /etc/ssh/sshd_config
+if [ "$IS_ALPINE" -eq 1 ]; then
+  # ── Alpine / OpenRC ──
+  sed -i '/^[#[:space:]]*Port/d' /etc/ssh/sshd_config
+  sed -i '/^[#[:space:]]*PubkeyAuthentication/d' /etc/ssh/sshd_config
+  sed -i '/^[#[:space:]]*PasswordAuthentication/d' /etc/ssh/sshd_config
 
-# 4. 添加端口+启用密钥+禁用密码
-echo "Port $PORT" >> /etc/ssh/sshd_config
-echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
-echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+  echo "Port $PORT" >> /etc/ssh/sshd_config
+  echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
+  echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 
-# 4. 重启ssh
-systemctl daemon-reload
-systemctl restart ssh.socket 2>/dev/null || systemctl restart sshd
+  sshd -t || { echo "sshd_config 语法错误，未重启"; exit 1; }
+  rc-service sshd restart
+else
+  # 3. 删除端口+删除密钥+删除密码
+  sed -i '/^#*Port/d' /etc/ssh/sshd_config
+  sed -i '/^#*PubkeyAuthentication/d' /etc/ssh/sshd_config
+  sed -i '/^#*PasswordAuthentication/d' /etc/ssh/sshd_config
+
+  # 4. 添加端口+启用密钥+禁用密码
+  echo "Port $PORT" >> /etc/ssh/sshd_config
+  echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
+  echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+
+  # 4. 重启ssh
+  systemctl daemon-reload
+  systemctl restart ssh.socket 2>/dev/null || systemctl restart sshd
+fi
